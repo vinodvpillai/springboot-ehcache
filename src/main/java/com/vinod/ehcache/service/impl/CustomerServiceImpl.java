@@ -5,6 +5,8 @@ import com.vinod.ehcache.repository.CustomerRepository;
 import com.vinod.ehcache.service.ICustomerService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ public class CustomerServiceImpl implements ICustomerService {
      * @return          - Persisted customer object.
      */
     @Override
+    @CachePut(cacheNames = "customerById", key = "#result.id")
     public Customer addCustomer(Customer customer) {
         log.trace("Request came to add new customer : {}",customer);
         customer.setStatus(true);
@@ -39,7 +42,7 @@ public class CustomerServiceImpl implements ICustomerService {
      * @return      - Customer object.
      */
     @Override
-    @Cacheable("getCustomerById")
+    @Cacheable(value = "customerById",key = "#id")
     public Customer getCustomerById(Long id) {
         log.trace("Request came to fetch the customer having customer id : {}",id);
         Optional<Customer> optionalCustomer=customerRepository.findById(id);
@@ -58,7 +61,7 @@ public class CustomerServiceImpl implements ICustomerService {
      * @return      - Customer object.
      */
     @Override
-    @Cacheable("getCustomerByEmailId")
+    @Cacheable(value = "customerByEmailId",key = "#emailId")
     public Customer getCustomerByEmailId(String emailId) {
         log.trace("Request came to fetch the customer having customer email id : {}",emailId);
         Optional<Customer> optionalCustomer=customerRepository.findByEmailId(emailId);
@@ -69,4 +72,11 @@ public class CustomerServiceImpl implements ICustomerService {
         }
         return null;
     }
+
+    @CacheEvict(cacheNames = {"customerById", "customerByEmailId"}, allEntries = true)
+    @Override
+    public void clearCache() {
+        log.info("Cleared the customer cache");
+    }
+
 }

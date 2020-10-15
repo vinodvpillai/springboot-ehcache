@@ -50,4 +50,10 @@ public class CustomerController {
         return buildResponseForError(HttpStatus.SC_BAD_REQUEST, String.valueOf(HttpStatus.SC_BAD_REQUEST),"No customer detail found for the given email id.",null);
     }
 
+    @DeleteMapping("/cache")
+    public ResponseEntity<Response> clearCustomerCache() {
+        log.trace("Request came to clear the customer cache");
+        customerService.clearCache();
+        return buildResponseForSuccess(HttpStatus.SC_OK,"Successfully cleared customer cache",null);
+    }
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Builder
 @Data
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @Log4j2
 @Entity
 @Table(name="customer",schema = "customer-ehcache")
-public class Customer {
+public class Customer implements Serializable {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)

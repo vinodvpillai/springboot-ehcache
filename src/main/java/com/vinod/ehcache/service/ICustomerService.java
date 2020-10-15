@@ -28,4 +28,9 @@ public interface ICustomerService {
      * @return      - Customer object.
      */
     Customer getCustomerByEmailId(String emailId);
+
+    /**
+     * Clear cache.
+     */
+    void clearCache();
 }
